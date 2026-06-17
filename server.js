@@ -120,8 +120,11 @@ function docsHtml() {
 function resolveFrontendPath(pathname) {
   const routes = {
     "/": path.join(__dirname, "public", "fronts", "hub.html"),
+    "/bootstrap/login": path.join(__dirname, "public", "fronts", "bootstrap", "login.html"),
     "/bootstrap": path.join(__dirname, "public", "fronts", "bootstrap", "index.html"),
+    "/workbench/login": path.join(__dirname, "public", "fronts", "workbench", "login.html"),
     "/workbench": path.join(__dirname, "public", "fronts", "workbench", "index.html"),
+    "/portfolio/login": path.join(__dirname, "public", "fronts", "portfolio", "login.html"),
     "/portfolio": path.join(__dirname, "public", "fronts", "portfolio", "index.html"),
   };
 

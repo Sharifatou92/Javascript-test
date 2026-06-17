@@ -13,13 +13,15 @@
         <div class="flex items-center gap-4">
           <img src="/assets/logo-uy1.png" alt="Logo" class="h-14 w-14 object-cover shadow-sm">
           <div>
-            <p class="text-xs uppercase tracking-[0.26em] text-amber-700">Client portfolio · Paul Koa</p>
-            <h1 class="mt-1 text-2xl font-semibold">Suivi relationnel · PAUL KOA</h1>
+            <p id="session-badge" class="text-xs uppercase tracking-[0.26em] text-amber-700">Client portfolio · Paul Koa</p>
+            <h1 class="mt-1 text-2xl font-semibold">Suivi relationnel · <span id="session-name">PAUL KOA</span></h1>
+            <div id="session-role" class="mt-1 text-sm text-stone-500">Client Portfolio</div>
           </div>
         </div>
         <div class="flex gap-2 text-sm">
           <a href="/" class="border border-stone-300 px-4 py-2">Hub</a>
           <a href="/docs" class="border border-stone-300 px-4 py-2">Swagger</a>
+          <button id="logout-button" class="border border-stone-300 px-4 py-2">Deconnexion</button>
         </div>
       </div>
     </header>
@@ -126,8 +128,10 @@
 
   <script type="module">
     import { createAccount, createStore, computeStats, loadAccount, money, postTransaction, refreshAccounts } from "/public/fronts/shared/core.js";
+    import { mountSession } from "/public/fronts/shared/auth.js";
 
     const store = createStore();
+    mountSession("portfolio");
     const accountListEl = document.getElementById("account-list");
     const detailEl = document.getElementById("account-detail");
     const transactionsEl = document.getElementById("transactions");

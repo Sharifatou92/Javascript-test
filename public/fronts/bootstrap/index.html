@@ -191,7 +191,8 @@
             <img src="/assets/logo-uy1.png" alt="Logo UY1">
             <div>
               <div class="text-uppercase small text-info-emphasis">Operations Console</div>
-              <div class="fw-semibold">SHARIFATOU MALAI</div>
+              <div id="session-name" class="fw-semibold">SHARIFATOU MALAI</div>
+              <div id="session-role" class="small text-secondary">Operations Console</div>
             </div>
           </div>
         </div>
@@ -202,6 +203,8 @@
           <a href="/portfolio"><span>03</span><span>Client Portfolio</span></a>
           <a href="/docs"><span>04</span><span>Swagger</span></a>
         </div>
+
+        <button id="logout-button" class="btn btn-outline-light rounded-0 w-100 mt-4">Deconnexion</button>
 
         <div class="mt-5">
           <div class="section-title mb-2">Cadence de travail</div>
@@ -383,8 +386,10 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module">
     import { createAccount, createStore, computeStats, loadAccount, money, postTransaction, refreshAccounts } from "/public/fronts/shared/core.js";
+    import { mountSession } from "/public/fronts/shared/auth.js";
 
     const store = createStore();
+    mountSession("bootstrap");
     const statusEl = document.getElementById("status");
     const searchEl = document.getElementById("search-input");
     const tableEl = document.getElementById("account-table");

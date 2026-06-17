@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paul Koa · Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background:
+        linear-gradient(180deg, rgba(245, 241, 232, 0.88), rgba(236, 227, 209, 0.92)),
+        repeating-linear-gradient(0deg, rgba(120, 53, 15, 0.04), rgba(120, 53, 15, 0.04) 1px, transparent 1px, transparent 34px);
+    }
+    .paper {
+      position: relative;
+    }
+    .paper::before {
+      content: "";
+      position: absolute;
+      inset: 14px -14px -14px 14px;
+      border: 1px solid rgba(120, 53, 15, 0.18);
+      z-index: -1;
+      transition: transform 0.35s ease;
+    }
+    .paper:hover::before {
+      transform: translate(6px, 6px);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-stone-900">
+  <main class="mx-auto grid min-h-screen w-full max-w-7xl gap-6 px-6 py-8 xl:grid-cols-[0.95fr_1.05fr]">
+    <section class="paper border border-stone-300 bg-white p-6 shadow-sm">
+      <div class="flex h-full flex-col justify-between">
+        <div>
+          <p class="text-xs uppercase tracking-[0.28em] text-amber-700">Paul Koa · Client Portfolio</p>
+          <h1 class="mt-4 text-4xl font-semibold tracking-tight">Acces au dossier client</h1>
+          <p class="mt-4 max-w-2xl text-sm leading-7 text-stone-600">
+            Composition inspiree des interfaces editorialisees et CRM disponibles sur GitHub :
+            page claire, panneaux documentaires, et lecture orientee relation client.
+          </p>
+        </div>
+
+        <div class="mt-8 grid gap-4 md:grid-cols-2">
+          <div class="border border-stone-200 p-4"><div class="text-xs uppercase tracking-[0.2em] text-stone-500">Perimetre</div><div class="mt-3 text-lg font-semibold">Dossier, historique et actions</div></div>
+          <div class="border border-stone-200 p-4"><div class="text-xs uppercase tracking-[0.2em] text-stone-500">Mode</div><div class="mt-3 text-lg font-semibold">Suivi relationnel</div></div>
+        </div>
+
+        <div class="mt-8 border-t border-stone-200 pt-5 text-sm leading-7 text-stone-600">
+          Le front Paul Koa sert la lecture client, l'ouverture de dossier et la visualisation narrative des transactions.
+        </div>
+      </div>
+    </section>
+
+    <section class="paper border border-stone-300 bg-stone-50 p-6 shadow-sm">
+      <div class="flex items-start justify-between gap-4 border-b border-stone-200 pb-5">
+        <div>
+          <p class="text-xs uppercase tracking-[0.24em] text-amber-700">Connexion</p>
+          <h2 class="mt-3 text-3xl font-semibold">Identifiants de demonstration</h2>
+        </div>
+        <a href="/" class="border border-stone-300 px-4 py-3 text-sm transition hover:border-stone-900">Hub</a>
+      </div>
+
+      <div class="mt-6 grid gap-3 md:grid-cols-2">
+        <div class="border border-stone-200 bg-white p-4"><div class="text-xs uppercase tracking-[0.2em] text-stone-500">Utilisateur</div><div class="mt-2 font-semibold">paulkoa</div></div>
+        <div class="border border-stone-200 bg-white p-4"><div class="text-xs uppercase tracking-[0.2em] text-stone-500">Mot de passe</div><div class="mt-2 font-semibold">Paul304</div></div>
+      </div>
+
+      <form id="login-form" class="mt-8 grid gap-4">
+        <label class="grid gap-2"><span class="text-sm text-stone-600">Identifiant</span><input name="username" value="paulkoa" required class="border border-stone-300 bg-white px-4 py-4 outline-none transition focus:border-stone-900"></label>
+        <label class="grid gap-2"><span class="text-sm text-stone-600">Mot de passe</span><input type="password" name="password" value="Paul304" required class="border border-stone-300 bg-white px-4 py-4 outline-none transition focus:border-stone-900"></label>
+        <button class="bg-stone-900 px-5 py-4 text-sm font-medium text-white transition hover:bg-stone-700">Ouvrir le portfolio</button>
+      </form>
+
+      <div id="login-status" class="mt-4 text-sm text-stone-500">Session locale prete pour le poste Paul Koa.</div>
+    </section>
+  </main>
+  <script type="module">
+    import { wireLogin } from "/public/fronts/shared/auth.js";
+    wireLogin("portfolio");
+  </script>
+</body>
+</html>
