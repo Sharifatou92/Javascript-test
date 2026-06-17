@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operations Console</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --console-bg: #eef2f6;
+      --console-panel: #ffffff;
+      --console-line: rgba(15, 23, 42, 0.08);
+      --console-text: #132235;
+      --console-muted: #607085;
+      --console-accent: #1458e0;
+      --console-success: #15803d;
+      --console-warning: #b45309;
+      --console-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f9fbfd 0%, var(--console-bg) 100%);
+      color: var(--console-text);
+      overflow-x: hidden;
+    }
+
+    .console-shell {
+      min-height: 100vh;
+    }
+
+    .console-sidebar {
+      min-height: 100vh;
+      background: #0f172a;
+      color: #e2e8f0;
+      position: sticky;
+      top: 0;
+    }
+
+    .console-brand {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .console-brand img {
+      width: 58px;
+      height: 58px;
+      object-fit: cover;
+      border-radius: 0;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.25);
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+
+    .console-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      text-decoration: none;
+      padding: 12px 14px;
+      transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+    }
+
+    .console-nav a:hover {
+      transform: translateX(4px);
+      border-color: rgba(96, 165, 250, 0.6);
+      background: rgba(59, 130, 246, 0.08);
+      color: #fff;
+    }
+
+    .console-stage {
+      padding: 28px 20px 32px;
+    }
+
+    .hero-banner {
+      background:
+        linear-gradient(135deg, rgba(20, 88, 224, 0.94), rgba(15, 23, 42, 0.96)),
+        url("/assets/logo-uy1.png") center/cover no-repeat;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: var(--console-shadow);
+      overflow: hidden;
+    }
+
+    .hero-banner .hero-text {
+      max-width: 760px;
+      animation: slide-up 550ms ease-out both;
+    }
+
+    .hero-banner .hero-pills span {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .metric-card,
+    .panel-card {
+      background: var(--console-panel);
+      border: 1px solid var(--console-line);
+      box-shadow: var(--console-shadow);
+    }
+
+    .metric-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -30px -30px auto;
+      width: 90px;
+      height: 90px;
+      border: 1px solid rgba(20, 88, 224, 0.12);
+      transform: rotate(35deg);
+    }
+
+    .metric-value {
+      font-size: 1.9rem;
+      font-weight: 700;
+    }
+
+    .account-table tbody tr {
+      transition: background-color 180ms ease, transform 180ms ease;
+    }
+
+    .account-table tbody tr:hover {
+      background: #f8fbff;
+      transform: scale(0.997);
+    }
+
+    .detail-frame {
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+      border-left: 4px solid var(--console-accent);
+    }
+
+    .activity-log {
+      max-height: 430px;
+      overflow: auto;
+    }
+
+    .activity-item {
+      border-left: 4px solid var(--console-accent);
+      background: #fbfdff;
+      animation: fade-in 260ms ease both;
+    }
+
+    .activity-item.withdraw {
+      border-left-color: var(--console-warning);
+    }
+
+    .status-chip {
+      min-height: 24px;
+      font-size: 0.92rem;
+    }
+
+    .section-title {
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      color: var(--console-muted);
+    }
+
+    @keyframes slide-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { transform: scale(1); box-shadow: 0 16px 30px rgba(0, 0, 0, 0.25); }
+      50% { transform: scale(1.04); box-shadow: 0 20px 42px rgba(37, 99, 235, 0.32); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid g-0 console-shell">
+    <div class="row g-0">
+      <aside class="col-12 col-xl-3 col-xxl-2 console-sidebar p-4">
+        <div class="console-brand pb-4 mb-4">
+          <div class="d-flex align-items-center gap-3">
+            <img src="/assets/logo-uy1.png" alt="Logo UY1">
+            <div>
+              <div class="text-uppercase small text-info-emphasis">Operations Console</div>
+              <div class="fw-semibold">SHARIFATOU MALAI</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="console-nav d-grid gap-2">
+          <a href="/"><span>01</span><span>Hub des fronts</span></a>
+          <a href="/workbench"><span>02</span><span>Treasury Workbench</span></a>
+          <a href="/portfolio"><span>03</span><span>Client Portfolio</span></a>
+          <a href="/docs"><span>04</span><span>Swagger</span></a>
+        </div>
+
+        <div class="mt-5">
+          <div class="section-title mb-2">Cadence de travail</div>
+          <p class="small text-secondary-emphasis mb-3">Une interface dense pour piloter les opérations à fort débit : création, caisse, consultation et surveillance.</p>
+          <div class="border border-light border-opacity-10 p-3 small text-light">
+            <div class="mb-2">Mode recommandé :</div>
+            <div>1. Créer un compte</div>
+            <div>2. Vérifier le registre</div>
+            <div>3. Déposer ou retirer</div>
+            <div>4. Contrôler le journal</div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="col-12 col-xl-9 col-xxl-10 console-stage">
+        <section class="hero-banner p-4 p-lg-5 mb-4">
+          <div class="hero-text">
+            <div class="section-title text-white-50 mb-2">Exploitation bancaire</div>
+            <h1 class="display-6 fw-semibold mb-3">Une console taillée pour l’exécution immédiate</h1>
+            <p class="lead fs-6 text-white-50 mb-4">Le front met l’accent sur la densité utile : lecture rapide du portefeuille, déclenchement d’opérations et contrôle du compte sélectionné sans changer d’écran.</p>
+            <div class="hero-pills">
+              <span>Registre centralisé</span>
+              <span>Fiche compte instantanée</span>
+              <span>Journal temps réel</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="row g-3 mb-4">
+          <div class="col-md-6 col-xl-3">
+            <div class="metric-card p-4">
+              <div class="section-title">Comptes actifs</div>
+              <div class="metric-value mt-2" id="stat-count">0</div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <div class="metric-card p-4">
+              <div class="section-title">Solde cumulé</div>
+              <div class="metric-value mt-2" id="stat-balance">0,00 XAF</div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <div class="metric-card p-4">
+              <div class="section-title">Compte actif</div>
+              <div class="fs-4 fw-semibold mt-2" id="stat-selected">Aucun</div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <div class="metric-card p-4">
+              <div class="section-title">Transactions visibles</div>
+              <div class="metric-value mt-2" id="stat-transactions">0</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="row g-4">
+          <div class="col-12 col-xxl-4">
+            <div class="panel-card p-4 mb-4">
+              <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <div>
+                  <div class="section-title">Ouverture</div>
+                  <h2 class="h5 mb-1">Créer un nouveau compte</h2>
+                </div>
+                <span class="badge text-bg-primary rounded-0">Bootstrapped</span>
+              </div>
+              <form id="create-form" class="row g-3">
+                <div class="col-12">
+                  <label class="form-label">Nom complet</label>
+                  <input class="form-control rounded-0" name="full_name" required>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Téléphone</label>
+                  <input class="form-control rounded-0" name="phone_number" required>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Email</label>
+                  <input class="form-control rounded-0" name="email" type="email">
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Solde initial</label>
+                  <input class="form-control rounded-0" name="initial_balance" type="number" min="0" step="0.01">
+                </div>
+                <div class="col-12">
+                  <button class="btn btn-primary rounded-0 w-100" type="submit">Créer le compte</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="panel-card p-4">
+              <div class="section-title mb-2">Caisse</div>
+              <h2 class="h5 mb-3">Déclencher une opération</h2>
+              <div class="accordion accordion-flush" id="cashAccordion">
+                <div class="accordion-item border-0">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#depositPane">Déposer</button>
+                  </h2>
+                  <div id="depositPane" class="accordion-collapse collapse show" data-bs-parent="#cashAccordion">
+                    <div class="accordion-body px-0 pb-0">
+                      <form id="deposit-form" class="row g-2">
+                        <div class="col-12"><input class="form-control rounded-0" name="account_id" placeholder="ID compte" required></div>
+                        <div class="col-12"><input class="form-control rounded-0" name="amount" placeholder="Montant" type="number" min="0.01" step="0.01" required></div>
+                        <div class="col-12"><input class="form-control rounded-0" name="description" placeholder="Description"></div>
+                        <div class="col-12"><button class="btn btn-success rounded-0 w-100" type="submit">Confirmer le dépôt</button></div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item border-0 mt-3">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed rounded-0" type="button" data-bs-toggle="collapse" data-bs-target="#withdrawPane">Retirer</button>
+                  </h2>
+                  <div id="withdrawPane" class="accordion-collapse collapse" data-bs-parent="#cashAccordion">
+                    <div class="accordion-body px-0 pb-0">
+                      <form id="withdraw-form" class="row g-2">
+                        <div class="col-12"><input class="form-control rounded-0" name="account_id" placeholder="ID compte" required></div>
+                        <div class="col-12"><input class="form-control rounded-0" name="amount" placeholder="Montant" type="number" min="0.01" step="0.01" required></div>
+                        <div class="col-12"><input class="form-control rounded-0" name="description" placeholder="Description"></div>
+                        <div class="col-12"><button class="btn btn-warning rounded-0 w-100" type="submit">Confirmer le retrait</button></div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="status" class="status-chip mt-3 text-secondary"></div>
+            </div>
+          </div>
+
+          <div class="col-12 col-xxl-8">
+            <div class="panel-card p-4 mb-4">
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                <div>
+                  <div class="section-title">Registre</div>
+                  <h2 class="h5 mb-1">Tableau des comptes</h2>
+                </div>
+                <div class="d-flex gap-2">
+                  <input id="search-input" class="form-control rounded-0" placeholder="Nom, numéro ou téléphone">
+                  <button id="refresh-button" class="btn btn-outline-dark rounded-0">Actualiser</button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table account-table align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Client</th>
+                      <th>Compte</th>
+                      <th>Solde</th>
+                      <th>Créé le</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="account-table"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="row g-4">
+              <div class="col-lg-5">
+                <div class="panel-card p-4 h-100">
+                  <div class="section-title mb-2">Compte sélectionné</div>
+                  <h2 class="h5 mb-3">Fiche opérationnelle</h2>
+                  <div id="account-detail" class="detail-frame p-3 text-secondary">Sélectionne un compte pour afficher ses informations.</div>
+                </div>
+              </div>
+              <div class="col-lg-7">
+                <div class="panel-card p-4 h-100">
+                  <div class="section-title mb-2">Journal d’activité</div>
+                  <h2 class="h5 mb-3">Historique utile</h2>
+                  <div id="transactions" class="activity-log d-grid gap-3 text-secondary">Aucune transaction chargée.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module">
+    import { createAccount, createStore, computeStats, loadAccount, money, postTransaction, refreshAccounts } from "/public/fronts/shared/core.js";
+
+    const store = createStore();
+    const statusEl = document.getElementById("status");
+    const searchEl = document.getElementById("search-input");
+    const tableEl = document.getElementById("account-table");
+    const detailEl = document.getElementById("account-detail");
+    const transactionsEl = document.getElementById("transactions");
+
+    function setStatus(message, tone = "text-secondary") {
+      statusEl.className = `status-chip mt-3 ${tone}`;
+      statusEl.textContent = message || "";
+    }
+
+    function renderStats() {
+      const stats = computeStats(store.accounts, store.selectedAccount);
+      document.getElementById("stat-count").textContent = stats.count;
+      document.getElementById("stat-balance").textContent = money(stats.totalBalance);
+      document.getElementById("stat-selected").textContent = stats.selectedLabel;
+      document.getElementById("stat-transactions").textContent = stats.transactionCount;
+    }
+
+    function filteredAccounts() {
+      const query = searchEl.value.trim().toLowerCase();
+      if (!query) return store.accounts;
+      return store.accounts.filter((account) =>
+        account.full_name.toLowerCase().includes(query) ||
+        account.account_number.toLowerCase().includes(query) ||
+        account.phone_number.toLowerCase().includes(query)
+      );
+    }
+
+    function renderAccounts() {
+      const accounts = filteredAccounts();
+      if (!accounts.length) {
+        tableEl.innerHTML = `<tr><td colspan="5" class="text-secondary py-4">Aucun compte à afficher.</td></tr>`;
+        return;
+      }
+
+      tableEl.innerHTML = accounts.map((account) => `
+        <tr>
+          <td>
+            <div class="fw-semibold">${account.full_name}</div>
+            <div class="small text-secondary">${account.phone_number}${account.email ? ` · ${account.email}` : ""}</div>
+          </td>
+          <td>${account.account_number}</td>
+          <td>${money(account.balance)}</td>
+          <td>${new Date(account.created_at).toLocaleString("fr-FR")}</td>
+          <td><button class="btn btn-sm btn-outline-primary rounded-0" data-open="${account.id}">Ouvrir</button></td>
+        </tr>
+      `).join("");
+
+      tableEl.querySelectorAll("[data-open]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          await selectAccount(button.dataset.open);
+          setStatus("Compte chargé.", "text-success");
+        });
+      });
+    }
+
+    function renderDetail() {
+      if (!store.selectedAccount) {
+        detailEl.textContent = "Sélectionne un compte pour afficher ses informations.";
+        transactionsEl.textContent = "Aucune transaction chargée.";
+        renderStats();
+        return;
+      }
+
+      const account = store.selectedAccount;
+      detailEl.innerHTML = `
+        <div class="d-grid gap-2">
+          <div class="fw-semibold fs-5">${account.full_name}</div>
+          <div>${account.account_number}</div>
+          <div class="text-secondary">Téléphone : ${account.phone_number}</div>
+          <div class="text-secondary">Email : ${account.email || "Non renseigné"}</div>
+          <div>Solde : <strong>${money(account.balance)}</strong></div>
+          <div class="text-secondary">Création : ${new Date(account.created_at).toLocaleString("fr-FR")}</div>
+        </div>
+      `;
+
+      if (!account.transactions?.length) {
+        transactionsEl.innerHTML = `<div class="text-secondary">Aucune transaction enregistrée.</div>`;
+        renderStats();
+        return;
+      }
+
+      transactionsEl.innerHTML = account.transactions.map((transaction) => `
+        <div class="activity-item ${transaction.transaction_type === "withdraw" ? "withdraw" : ""} p-3">
+          <div class="d-flex justify-content-between align-items-center gap-3">
+            <strong class="text-uppercase small">${transaction.transaction_type}</strong>
+            <span class="fw-semibold">${money(transaction.amount)}</span>
+          </div>
+          <div class="text-secondary small mt-2">${transaction.description || "Sans description"}</div>
+          <div class="text-secondary small mt-1">Solde après : ${money(transaction.balance_after)}</div>
+          <div class="text-secondary small mt-1">${new Date(transaction.created_at).toLocaleString("fr-FR")}</div>
+        </div>
+      `).join("");
+      renderStats();
+    }
+
+    async function sync(preserveSelection = true) {
+      await refreshAccounts(store);
+      if (preserveSelection && store.selectedAccountId) {
+        try { await loadAccount(store, store.selectedAccountId); } catch {}
+      }
+      renderAccounts();
+      renderDetail();
+    }
+
+    async function selectAccount(accountId) {
+      await loadAccount(store, accountId);
+      renderAccounts();
+      renderDetail();
+    }
+
+    document.getElementById("create-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      try {
+        const created = await createAccount({
+          full_name: form.get("full_name"),
+          phone_number: form.get("phone_number"),
+          email: form.get("email") || undefined,
+          initial_balance: form.get("initial_balance") || 0,
+        });
+        event.currentTarget.reset();
+        await sync(false);
+        await selectAccount(created.id);
+        setStatus("Compte créé avec succès.", "text-success");
+      } catch (error) {
+        setStatus(error.message, "text-warning");
+      }
+    });
+
+    function wireTransaction(formId, type, successMessage) {
+      document.getElementById(formId).addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        try {
+          await postTransaction(form.get("account_id"), type, {
+            amount: form.get("amount"),
+            description: form.get("description"),
+          });
+          await sync();
+          await selectAccount(form.get("account_id"));
+          setStatus(successMessage, "text-success");
+        } catch (error) {
+          setStatus(error.message, "text-warning");
+        }
+      });
+    }
+
+    wireTransaction("deposit-form", "deposit", "Dépôt enregistré.");
+    wireTransaction("withdraw-form", "withdraw", "Retrait enregistré.");
+
+    document.getElementById("refresh-button").addEventListener("click", async () => {
+      await sync();
+      setStatus("Registre actualisé.", "text-success");
+    });
+
+    searchEl.addEventListener("input", renderAccounts);
+    sync(false).catch((error) => setStatus(error.message, "text-warning"));
+  </script>
+</body>
+</html>

@@ -117,13 +117,41 @@ function docsHtml() {
 </html>`;
 }
 
+function resolveFrontendPath(pathname) {
+  const routes = {
+    "/": path.join(__dirname, "public", "fronts", "hub.html"),
+    "/bootstrap": path.join(__dirname, "public", "fronts", "bootstrap", "index.html"),
+    "/workbench": path.join(__dirname, "public", "fronts", "workbench", "index.html"),
+    "/portfolio": path.join(__dirname, "public", "fronts", "portfolio", "index.html"),
+  };
+
+  return routes[pathname] || null;
+}
+
 function createServer() {
   return http.createServer(async (request, response) => {
   const url = new URL(request.url, `http://${HOST}:${PORT}`);
   const pathname = url.pathname;
 
-  if (request.method === "GET" && pathname === "/") {
-    sendFile(response, path.join(__dirname, "public", "index.html"), "text/html; charset=utf-8");
+  if (request.method === "GET") {
+    const frontendPath = resolveFrontendPath(pathname);
+    if (frontendPath) {
+      sendFile(response, frontendPath, "text/html; charset=utf-8");
+      return;
+    }
+  }
+
+  if (request.method === "GET" && pathname.startsWith("/public/fronts/")) {
+    const relativePath = pathname.replace(/^\/+/, "");
+    const filePath = path.join(__dirname, relativePath);
+    const ext = path.extname(filePath);
+    const contentTypeMap = {
+      ".js": "text/javascript; charset=utf-8",
+      ".css": "text/css; charset=utf-8",
+      ".html": "text/html; charset=utf-8",
+      ".png": "image/png",
+    };
+    sendFile(response, filePath, contentTypeMap[ext] || "application/octet-stream");
     return;
   }
 

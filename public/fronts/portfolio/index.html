@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Client Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-stone-100 text-stone-900">
+  <div class="min-h-screen">
+    <header class="border-b border-stone-200 bg-white">
+      <div class="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-5">
+        <div class="flex items-center gap-4">
+          <img src="/assets/logo-uy1.png" alt="Logo" class="h-14 w-14 object-cover shadow-sm">
+          <div>
+            <p class="text-xs uppercase tracking-[0.26em] text-amber-700">Client portfolio</p>
+            <h1 class="mt-1 text-2xl font-semibold">Suivi relationnel · SHARIFATOU MALAI</h1>
+          </div>
+        </div>
+        <div class="flex gap-2 text-sm">
+          <a href="/" class="border border-stone-300 px-4 py-2">Hub</a>
+          <a href="/docs" class="border border-stone-300 px-4 py-2">Swagger</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-6">
+      <section class="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+        <div class="overflow-hidden border border-stone-200 bg-white shadow-sm">
+          <div class="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+            <div class="relative min-h-[260px] overflow-hidden bg-stone-900 text-white">
+              <img src="/assets/logo-uy1.png" alt="Logo" class="absolute inset-0 h-full w-full object-cover opacity-20">
+              <div class="relative flex h-full flex-col justify-end p-6">
+                <p class="text-xs uppercase tracking-[0.26em] text-amber-300">Fiche relationnelle</p>
+                <h2 id="detail-title" class="mt-3 text-3xl font-semibold">Aucun compte ouvert</h2>
+                <p id="detail-account-number" class="mt-2 text-sm text-stone-300">Aucun numéro</p>
+                <div class="mt-5 inline-flex border border-white/20 px-4 py-2 text-sm">
+                  Solde actuel&nbsp;: <strong id="detail-balance" class="ml-2">0,00 XAF</strong>
+                </div>
+              </div>
+            </div>
+            <div class="p-6">
+              <div class="grid gap-4 sm:grid-cols-3">
+                <div class="border border-stone-200 p-4">
+                  <p class="text-xs uppercase tracking-[0.18em] text-stone-500">Comptes</p>
+                  <p id="stat-count" class="mt-2 text-3xl font-semibold">0</p>
+                </div>
+                <div class="border border-stone-200 p-4">
+                  <p class="text-xs uppercase tracking-[0.18em] text-stone-500">Encours</p>
+                  <p id="stat-balance" class="mt-2 text-3xl font-semibold">0,00 XAF</p>
+                </div>
+                <div class="border border-stone-200 p-4">
+                  <p class="text-xs uppercase tracking-[0.18em] text-stone-500">Transactions</p>
+                  <p id="stat-transactions" class="mt-2 text-3xl font-semibold">0</p>
+                </div>
+              </div>
+              <div id="account-detail" class="mt-6 grid gap-4 text-sm text-stone-500">Sélectionne un compte pour afficher son dossier détaillé.</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="grid gap-6">
+          <div class="border border-stone-200 bg-white p-5 shadow-sm">
+            <h2 class="font-semibold">Recherche portefeuille</h2>
+            <input id="search-input" class="mt-4 w-full border border-stone-300 px-3 py-3 text-sm" placeholder="Filtrer un client">
+            <button id="refresh-button" class="mt-3 w-full border border-stone-300 px-4 py-3 text-sm">Actualiser le portefeuille</button>
+          </div>
+
+          <div class="border border-stone-200 bg-white p-5 shadow-sm">
+            <h2 class="font-semibold">Création express</h2>
+            <form id="create-form" class="mt-4 grid gap-3">
+              <input class="border border-stone-300 px-3 py-3 text-sm" name="full_name" placeholder="Nom complet" required>
+              <input class="border border-stone-300 px-3 py-3 text-sm" name="phone_number" placeholder="Téléphone" required>
+              <input class="border border-stone-300 px-3 py-3 text-sm" name="email" type="email" placeholder="Email">
+              <input class="border border-stone-300 px-3 py-3 text-sm" name="initial_balance" type="number" min="0" step="0.01" placeholder="Solde initial">
+              <button class="bg-stone-900 px-4 py-3 text-sm font-medium text-white">Créer le compte</button>
+            </form>
+          </div>
+        </aside>
+      </section>
+
+      <section class="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)_340px]">
+        <aside class="border border-stone-200 bg-white shadow-sm">
+          <div class="border-b border-stone-200 p-4">
+            <p class="text-xs uppercase tracking-[0.18em] text-stone-500">Portefeuille comptes</p>
+            <p class="mt-2 text-sm text-stone-500">Sélection visuelle des dossiers clients chargés.</p>
+          </div>
+          <div id="account-list" class="grid max-h-[620px] overflow-auto"></div>
+        </aside>
+
+        <section class="border border-stone-200 bg-white p-6 shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs uppercase tracking-[0.18em] text-stone-500">Narration du compte</p>
+              <h3 class="mt-2 text-xl font-semibold">Historique client</h3>
+            </div>
+            <div class="text-sm text-stone-500">lecture centrée dossier</div>
+          </div>
+          <div id="transactions" class="mt-6 grid gap-4 text-sm text-stone-500">Aucune transaction visible.</div>
+        </section>
+
+        <aside class="border border-stone-200 bg-white p-5 shadow-sm">
+          <h2 class="font-semibold">Traitement du dossier</h2>
+          <div class="mt-5 grid gap-5">
+            <form id="deposit-form" class="grid gap-3 border border-stone-200 p-4">
+              <div class="text-sm font-medium">Créditer</div>
+              <input class="border border-stone-300 px-3 py-3 text-sm" name="account_id" placeholder="ID dépôt" required>
+              <input class="border border-stone-300 px-3 py-3 text-sm" name="amount" type="number" min="0.01" step="0.01" placeholder="Montant" required>
+              <textarea class="border border-stone-300 px-3 py-3 text-sm" name="description" placeholder="Justification"></textarea>
+              <button class="bg-emerald-700 px-4 py-3 text-sm font-medium text-white">Déposer</button>
+            </form>
+
+            <form id="withdraw-form" class="grid gap-3 border border-stone-200 p-4">
+              <div class="text-sm font-medium">Débiter</div>
+              <input class="border border-stone-300 px-3 py-3 text-sm" name="account_id" placeholder="ID retrait" required>
+              <input class="border border-stone-300 px-3 py-3 text-sm" name="amount" type="number" min="0.01" step="0.01" placeholder="Montant" required>
+              <textarea class="border border-stone-300 px-3 py-3 text-sm" name="description" placeholder="Justification"></textarea>
+              <button class="bg-amber-700 px-4 py-3 text-sm font-medium text-white">Retirer</button>
+            </form>
+          </div>
+          <div id="status" class="mt-5 text-sm text-stone-500"></div>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { createAccount, createStore, computeStats, loadAccount, money, postTransaction, refreshAccounts } from "/public/fronts/shared/core.js";
+
+    const store = createStore();
+    const accountListEl = document.getElementById("account-list");
+    const detailEl = document.getElementById("account-detail");
+    const transactionsEl = document.getElementById("transactions");
+    const searchEl = document.getElementById("search-input");
+    const statusEl = document.getElementById("status");
+
+    function setStatus(message, tone = "text-stone-500") {
+      statusEl.className = `mt-5 text-sm ${tone}`;
+      statusEl.textContent = message || "";
+    }
+
+    function renderStats() {
+      const stats = computeStats(store.accounts, store.selectedAccount);
+      document.getElementById("stat-count").textContent = stats.count;
+      document.getElementById("stat-balance").textContent = money(stats.totalBalance);
+      document.getElementById("stat-transactions").textContent = stats.transactionCount;
+    }
+
+    function viewAccounts() {
+      const query = searchEl.value.trim().toLowerCase();
+      return !query
+        ? store.accounts
+        : store.accounts.filter((account) =>
+            account.full_name.toLowerCase().includes(query) ||
+            account.account_number.toLowerCase().includes(query)
+          );
+    }
+
+    function renderAccounts() {
+      const accounts = viewAccounts();
+      if (!accounts.length) {
+        accountListEl.innerHTML = `<div class="p-4 text-sm text-stone-500">Aucun compte trouvé.</div>`;
+        return;
+      }
+      accountListEl.innerHTML = accounts.map((account) => `
+        <button class="border-b border-stone-200 bg-white p-4 text-left transition hover:bg-stone-50" data-open="${account.id}">
+          <div class="text-xs uppercase tracking-[0.18em] text-stone-400">${account.account_number}</div>
+          <div class="mt-2 font-medium">${account.full_name}</div>
+          <div class="mt-3 flex items-center justify-between gap-3 text-sm">
+            <span class="text-stone-500">${account.phone_number}</span>
+            <span class="font-semibold">${money(account.balance)}</span>
+          </div>
+        </button>
+      `).join("");
+      accountListEl.querySelectorAll("[data-open]").forEach((button) => button.addEventListener("click", () => openAccount(button.dataset.open)));
+    }
+
+    function renderDetail() {
+      if (!store.selectedAccount) {
+        document.getElementById("detail-title").textContent = "Aucun compte ouvert";
+        document.getElementById("detail-account-number").textContent = "Aucun numéro";
+        document.getElementById("detail-balance").textContent = "0,00 XAF";
+        detailEl.textContent = "Sélectionne un compte pour afficher son dossier détaillé.";
+        transactionsEl.textContent = "Aucune transaction visible.";
+        renderStats();
+        return;
+      }
+
+      const account = store.selectedAccount;
+      document.getElementById("detail-title").textContent = account.full_name;
+      document.getElementById("detail-account-number").textContent = account.account_number;
+      document.getElementById("detail-balance").textContent = money(account.balance);
+      detailEl.innerHTML = `
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="border border-stone-200 p-4">
+            <div class="text-xs uppercase tracking-[0.18em] text-stone-500">Coordonnées</div>
+            <div class="mt-3 grid gap-2">
+              <div>Téléphone : ${account.phone_number}</div>
+              <div>Email : ${account.email || "Non renseigné"}</div>
+            </div>
+          </div>
+          <div class="border border-stone-200 p-4">
+            <div class="text-xs uppercase tracking-[0.18em] text-stone-500">Cycle de vie</div>
+            <div class="mt-3 grid gap-2">
+              <div>Créé le ${new Date(account.created_at).toLocaleString("fr-FR")}</div>
+              <div>Identifiant : ${account.id}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (!account.transactions?.length) {
+        transactionsEl.innerHTML = `<div class="text-stone-500">Aucune transaction enregistrée.</div>`;
+        renderStats();
+        return;
+      }
+
+      transactionsEl.innerHTML = account.transactions.map((transaction) => `
+        <article class="grid gap-0 overflow-hidden border border-stone-200 md:grid-cols-[120px_minmax(0,1fr)]">
+          <div class="bg-stone-900 p-4 text-white">
+            <div class="text-xs uppercase tracking-[0.2em] text-stone-300">${transaction.transaction_type}</div>
+            <div class="mt-3 text-lg font-semibold">${money(transaction.amount)}</div>
+          </div>
+          <div class="p-4">
+            <div class="text-sm leading-7 text-stone-600">${transaction.description || "Sans description"}</div>
+            <div class="mt-3 flex flex-wrap gap-4 text-xs uppercase tracking-[0.18em] text-stone-500">
+              <span>Solde après : ${money(transaction.balance_after)}</span>
+              <span>${new Date(transaction.created_at).toLocaleString("fr-FR")}</span>
+            </div>
+          </div>
+        </article>
+      `).join("");
+      renderStats();
+    }
+
+    async function sync(preserve = true) {
+      await refreshAccounts(store);
+      if (preserve && store.selectedAccountId) {
+        try { await loadAccount(store, store.selectedAccountId); } catch {}
+      }
+      renderAccounts();
+      renderDetail();
+    }
+
+    async function openAccount(id) {
+      try {
+        await loadAccount(store, id);
+        renderAccounts();
+        renderDetail();
+        setStatus("Dossier chargé.", "mt-5 text-sm text-emerald-700");
+      } catch (error) {
+        setStatus(error.message, "mt-5 text-sm text-amber-700");
+      }
+    }
+
+    document.getElementById("create-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      try {
+        const created = await createAccount({
+          full_name: form.get("full_name"),
+          phone_number: form.get("phone_number"),
+          email: form.get("email") || undefined,
+          initial_balance: form.get("initial_balance") || 0,
+        });
+        event.currentTarget.reset();
+        await sync(false);
+        await openAccount(created.id);
+        setStatus("Compte créé.", "mt-5 text-sm text-emerald-700");
+      } catch (error) {
+        setStatus(error.message, "mt-5 text-sm text-amber-700");
+      }
+    });
+
+    function wireTransaction(formId, type, message) {
+      document.getElementById(formId).addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        try {
+          await postTransaction(form.get("account_id"), type, {
+            amount: form.get("amount"),
+            description: form.get("description"),
+          });
+          await sync();
+          await openAccount(form.get("account_id"));
+          setStatus(message, "mt-5 text-sm text-emerald-700");
+        } catch (error) {
+          setStatus(error.message, "mt-5 text-sm text-amber-700");
+        }
+      });
+    }
+
+    wireTransaction("deposit-form", "deposit", "Crédit enregistré.");
+    wireTransaction("withdraw-form", "withdraw", "Débit enregistré.");
+    document.getElementById("refresh-button").addEventListener("click", () => sync());
+    searchEl.addEventListener("input", renderAccounts);
+    sync(false).catch((error) => setStatus(error.message, "mt-5 text-sm text-amber-700"));
+  </script>
+</body>
+</html>
