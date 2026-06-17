@@ -2,8 +2,8 @@
 
 ## Informations de l'étudiant
 
-- Nom et prénom : **KOA ESSAMA PAULIN BRICE**
-- Matricule : **25I2255**
+- Nom et prénom : **SHARIFATOU MALAI**
+- Matricule : **25I2263**
 - Niveau : **Licence 3 ICT**
 - Établissement : **Université de Yaoundé I**
 - Intitulé du devoir : **Conception d'une API JavaScript pour un système de transaction bancaire**
@@ -148,7 +148,7 @@ Le système doit respecter les contraintes suivantes :
 {
   "full_name": "KOA ESSAMA PAULIN BRICE",
   "phone_number": "699001122",
-  "email": "thierry@example.com",
+  "email": "sharifatou@example.com",
   "initial_balance": 10000
 }
 ```
