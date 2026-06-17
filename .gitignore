@@ -1,0 +1,8 @@
+node_modules/
+coverage/
+htmlcov/
+.coverage
+*.log
+test/performance/hey/results/
+test/performance/jmeter/results.jtl
+test/performance/jmeter/report/

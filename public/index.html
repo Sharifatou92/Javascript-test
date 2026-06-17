@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Banque 304 - Sharifatou Malai</title>
+  <link rel="stylesheet" href="/public/app.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="inner">
+        <div class="brand">
+          <img src="/assets/logo-uy1.png" alt="Logo">
+          <div>
+            <h1>Banque 304 - Sharifatou Malai</h1>
+            <p>Interface de demonstration pour l'API bancaire JavaScript de SHARIFATOU MALAI</p>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/docs">Swagger</a>
+          <a href="/openapi.json">OpenAPI</a>
+          <a href="/cahier-de-charges">Cahier des charges</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="section hero">
+      <div class="inner">
+        <div class="hero-copy">
+          <h2>Operations bancaires courantes pour SHARIFATOU MALAI</h2>
+          <p>Cette interface pilote la creation de comptes, le chargement des details, les depots et les retraits. Elle reste volontairement dense et operationnelle pour un usage de TP.</p>
+          <div class="stats">
+            <div class="stat"><label>Comptes charges</label><strong id="stat-count">0</strong></div>
+            <div class="stat"><label>Solde cumule</label><strong id="stat-balance">0,00 XAF</strong></div>
+            <div class="stat"><label>Compte actif</label><strong id="stat-selected">Aucun</strong></div>
+          </div>
+        </div>
+        <aside class="hero-side">
+          <h3>Surface disponible</h3>
+          <ul>
+            <li>Creation d'un compte avec solde initial</li>
+            <li>Chargement detaille d'un compte</li>
+            <li>Depot et retrait avec description</li>
+            <li>Lecture directe de l'historique des transactions</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section workspace">
+      <div class="inner">
+        <div class="stack">
+          <section class="surface">
+            <h3>Nouveau compte</h3>
+            <form id="create-form" class="form-grid">
+              <label class="field">Nom complet<input name="full_name" required></label>
+              <label class="field">Telephone<input name="phone_number" required></label>
+              <label class="field">Email<input name="email" type="email"></label>
+              <label class="field">Solde initial<input name="initial_balance" type="number" min="0" step="0.01"></label>
+              <button class="button primary" type="submit">Creer</button>
+            </form>
+          </section>
+
+          <section class="surface">
+            <h3>Selection</h3>
+            <form id="selected-form" class="form-grid">
+              <label class="field">Identifiant du compte<input id="selected-account-id" name="account_id"></label>
+              <div class="toolbar">
+                <button class="button primary" type="submit">Charger</button>
+                <button class="button" id="refresh-button" type="button">Actualiser</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="surface">
+            <h3>Operation</h3>
+            <div class="split">
+              <form id="deposit-form" class="form-grid">
+                <label class="field">Compte<input name="account_id" required></label>
+                <label class="field">Montant<input name="amount" type="number" min="0.01" step="0.01" required></label>
+                <label class="field">Description<textarea name="description"></textarea></label>
+                <button class="button primary" type="submit">Deposer</button>
+              </form>
+
+              <form id="withdraw-form" class="form-grid">
+                <label class="field">Compte<input name="account_id" required></label>
+                <label class="field">Montant<input name="amount" type="number" min="0.01" step="0.01" required></label>
+                <label class="field">Description<textarea name="description"></textarea></label>
+                <button class="button secondary" type="submit">Retirer</button>
+              </form>
+            </div>
+          </section>
+        </div>
+
+        <div class="panel-grid">
+          <section class="surface">
+            <h3>Comptes</h3>
+            <div id="account-list" class="account-list"></div>
+          </section>
+
+          <section class="surface">
+            <h3>Compte selectionne</h3>
+            <div id="account-detail"></div>
+          </section>
+
+          <section class="surface">
+            <h3>Transactions</h3>
+            <div id="transactions" class="txn-list"></div>
+          </section>
+
+          <section class="surface">
+            <h3>Etat</h3>
+            <div id="status" class="status muted"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="/public/app.js"></script>
+</body>
+</html>
